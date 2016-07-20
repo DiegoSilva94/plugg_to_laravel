@@ -17,7 +17,7 @@
   },
   "autoload": {
     "psr-4": {
-      "PluggTo\\SDK\\": "src/PluggTo/SDK/"
+      "PluggTo\\SDK\\": "src/PluggTo/SDK/",
       "PluggTo\\ServiceProvider\\": "src/PluggTo/ServiceProvider/"
     }
   },
