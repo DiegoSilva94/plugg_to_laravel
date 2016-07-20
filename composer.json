@@ -1,0 +1,27 @@
+{
+  "name": "dsilva94/plugg_to_laravel",
+  "description": "Conexão com a api plugg com compatibilidade laravel",
+  "keywords": ["laravel", "plugg", "plugg.to"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Diego da Silva Oliveira",
+      "email": "dsilvaoliveira94@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "dsilvaoliveira94@gmail.com"
+  },
+  "require": {
+  },
+  "autoload": {
+    "psr-4": {
+      "PluggTo\\SDK": "src/PluggTo/SDK"
+    }
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "minimum-stability": "stable"
+}
