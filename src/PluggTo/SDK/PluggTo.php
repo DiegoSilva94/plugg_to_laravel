@@ -153,7 +153,7 @@ class PluggTo
 		$status = curl_getinfo($call);
 		if ($answer === false || !isset($status['http_code']) || empty($status['http_code']))
 			throw new PluggToException('OUT', 5);
-		if( $status['http_code'] != 200 || $status['http_code'] != 201 )
+		if( $status['http_code'] != 200 && $status['http_code'] != 201 )
 			throw new PluggToException(curl_error($call), 6);
 		// close the call
 		curl_close($call);
