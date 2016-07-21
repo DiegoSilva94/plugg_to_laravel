@@ -38,6 +38,7 @@ class PluggTo
 			Session::put('refresh_token', $data['refresh_token']);
 			Session::put('expire_access', $data['expires_in']);
 			Session::put('connect', $data['body']['data']['plugg_id']);
+			Session::put('user_id', $data['id']);
 			$this->auth();
 		} catch (Exception $e) {
 			throw new PluggToException("Usuario não encontrado", 5);
@@ -65,6 +66,12 @@ class PluggTo
 		$user->refresh_token = Session::get('refresh_token');
 		$user->expire_access = Session::get('expire_access');
 		$user->push();
+		Session::put('user_id', $user->id);
+	}
+
+	public function userId()
+	{
+		return Session::get('user_id');
 	}
 
 	public function auth()
