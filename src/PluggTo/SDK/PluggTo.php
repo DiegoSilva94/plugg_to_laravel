@@ -164,6 +164,7 @@ class PluggTo
 		$answer = curl_exec($call);
 		// get the curl statys
 		$status = curl_getinfo($call);
+		dd($answer, $status);
 		if ($answer === false || !isset($status['http_code']) || empty($status['http_code']))
 			throw new PluggToException('OUT', 5);
 		if( $status['http_code'] != 200 || $status['http_code'] != 201 )
