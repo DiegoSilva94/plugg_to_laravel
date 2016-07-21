@@ -89,11 +89,7 @@ class PluggTo
 			'client_id' => config('pluggTo.credencials.client'),
 			'client_secret' => config('pluggTo.credencials.password')
 		);
-		try {
-			$result = $this->request('Oauth/token', 'POST', $body, 'http');
-		} catch (Exception $e) {
-			throw new PluggToException("Problema na conexão", 2);
-		}
+		$result = $this->request('Oauth/token', 'POST', $body, 'http');
 		try {
 			$this->saveData($result);
 		} catch (Exception $e) {
@@ -109,11 +105,7 @@ class PluggTo
 			'client_secret' => config('pluggTo.credencials.password'),
 			'refresh_token' => Session::get('refresh_token')
 		);
-		try {
-			$result = $this->request('Oauth/token', 'POST', $body, 'http');
-		} catch (Exception $e) {
-			throw new PluggToException("Problema na conexão", 2);
-		}
+		$result = $this->request('Oauth/token', 'POST', $body, 'http');
 		try {
 			$this->saveData($result);
 		} catch (Exception $e) {
