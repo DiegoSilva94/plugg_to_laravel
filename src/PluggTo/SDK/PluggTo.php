@@ -34,10 +34,10 @@ class PluggTo
 	{
 		try {
 			$data = config('pluggTo.user_model')::firstOrNew(array('plugg_id' => $userid));
-			Session::put('access_token', $data['access_token'])
+			Session::put('access_token', $data['access_token']);
 			Session::put('refresh_token', $data['refresh_token']);
 			Session::put('expire_access', $data['expires_in']);
-			Session::put('connect', $me['body']['data']['plugg_id']);
+			Session::put('connect', $data['body']['data']['plugg_id']);
 			$this->auth();
 		} catch (Exception $e) {
 			throw new PluggToException("Usuario não encontrado", 5);
@@ -48,7 +48,7 @@ class PluggTo
 	// salva informações na Sessão e Banco de Dados
 	public function saveData($data)
 	{
-		Session::put('access_token', $data['body']['access_token'])
+		Session::put('access_token', $data['body']['access_token']);
 		Session::put('refresh_token', $data['body']['refresh_token']);
 		Session::put('expire_access', time() + $data['body']['expires_in'] - 60);
 		if (empty(Session::get('connect'))) {
@@ -91,7 +91,7 @@ class PluggTo
 		);
 		try {
 			$result = $this->request('Oauth/token', 'POST', $body, 'http');
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			throw new PluggToException("Problema na conexão", 2);
 		}
 		if($result['status']['http_code'] != 200)
@@ -108,12 +108,12 @@ class PluggTo
 		$body = array(
 			'grant_type' => 'refresh_token',
 			'client_id' => config('pluggTo.credencials.client'),
-			'client_secret' => config('pluggTo.credencials.password')
+			'client_secret' => config('pluggTo.credencials.password'),
 			'refresh_token' => Session::get('refresh_token')
 		);
 		try {
 			$result = $this->request('Oauth/token', 'POST', $body, 'http');
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			throw new PluggToException("Problema na conexão", 2);
 		}
 		if($result['status']['http_code'] != 200)
