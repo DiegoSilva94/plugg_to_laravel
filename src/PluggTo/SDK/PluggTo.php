@@ -94,8 +94,6 @@ class PluggTo
 		} catch (Exception $e) {
 			throw new PluggToException("Problema na conexão", 2);
 		}
-		if($result['status']['http_code'] != 200)
-			throw new PluggToException("Acesso negado", 3);
 		try {
 			$this->saveData($result);
 		} catch (Exception $e) {
@@ -116,9 +114,6 @@ class PluggTo
 		} catch (Exception $e) {
 			throw new PluggToException("Problema na conexão", 2);
 		}
-		if($result['status']['http_code'] != 200)
-			throw new PluggToException("Acesso negado", 3);
-		$result = $this->request('Oauth/token', 'POST', $body, 'http');
 		try {
 			$this->saveData($result);
 		} catch (Exception $e) {
@@ -164,7 +159,6 @@ class PluggTo
 		$answer = curl_exec($call);
 		// get the curl statys
 		$status = curl_getinfo($call);
-		dd($answer, $status);
 		if ($answer === false || !isset($status['http_code']) || empty($status['http_code']))
 			throw new PluggToException('OUT', 5);
 		if( $status['http_code'] != 200 || $status['http_code'] != 201 )
