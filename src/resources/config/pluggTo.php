@@ -13,5 +13,5 @@ return [
 	'credencials' => [
 		'client' => env('PLUGG_CLIENT', ''),
 		'password' => env('PLUGG_PASSWORD', '')
-	];
+	]
 ];
