@@ -64,7 +64,7 @@ class PluggTo
 		$user->access_token  = Session::get('access_token');
 		$user->refresh_token = Session::get('refresh_token');
 		$user->expire_access = Session::get('expire_access');
-		$user->save();
+		$user->push();
 	}
 
 	public function auth()
@@ -93,7 +93,7 @@ class PluggTo
 		try {
 			$this->saveData($result);
 		} catch (Exception $e) {
-			throw new PluggToException($e->getMessage() . " Não foi possivel armazenar o usuario", 4);
+			throw new PluggToException("Não foi possivel armazenar o usuario", 4);
 		}
 	}
 
