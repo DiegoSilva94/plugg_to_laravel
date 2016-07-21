@@ -93,7 +93,7 @@ class PluggTo
 		try {
 			$this->saveData($result);
 		} catch (Exception $e) {
-			throw new PluggToException("Não foi possivel armazenar o usuario", 4);
+			throw new PluggToException($e->getMessage() . " Não foi possivel armazenar o usuario", 4);
 		}
 	}
 
