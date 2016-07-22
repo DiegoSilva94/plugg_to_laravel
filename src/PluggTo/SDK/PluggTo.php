@@ -54,11 +54,11 @@ class PluggTo
 		Session::put('expire_access', time() + $data['body']['expires_in'] - 60);
 		if (empty(Session::get('plugg_id'))) {
 			$me = $this->request('users', 'GET', [], 'http');
-			dd($me);
-			Session::put('plugg_id', $me['body']['data']['plugg_id']);
+			Session::put('plugg_id', $me['body']['data']['id']);
 			$user = config('pluggTo.user_model')::firstOrNew(['plugg_id' => Session::get('plugg_id')]);
 			$user->name = $me['body']['data']['name'];
 			$user->email = $me['body']['data']['email'];
+			$user->status = $me['body']['data']['status'];
 		}
 		if(!isset($user))
 			$user = config('pluggTo.user_model')::firstOrNew(['plugg_id' => Session::get('plugg_id')]);
