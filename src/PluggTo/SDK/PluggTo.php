@@ -41,6 +41,8 @@ class PluggTo
 			Session::put('user_id', $data['id']);
 			$this->auth();
 		} catch (Exception $e) {
+			if(env('APP_DEBUG'))
+				throw new PluggToException($e->getMessage(), 5);
 			throw new PluggToException("Usuario não encontrado", 5);
 		}
 		return $this;
@@ -100,6 +102,8 @@ class PluggTo
 		try {
 			$this->saveData($result);
 		} catch (Exception $e) {
+			if(env('APP_DEBUG'))
+				throw new PluggToException($e->getMessage(), 4);
 			throw new PluggToException("Não foi possivel armazenar o usuario", 4);
 		}
 	}
@@ -116,6 +120,8 @@ class PluggTo
 		try {
 			$this->saveData($result);
 		} catch (Exception $e) {
+			if(env('APP_DEBUG'))
+				throw new PluggToException($e->getMessage(), 4);
 			throw new PluggToException("Não foi possivel armazenar o usuario", 4);
 		}
 	}
