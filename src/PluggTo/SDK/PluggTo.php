@@ -37,7 +37,7 @@ class PluggTo
 			Session::put('access_token', $data['access_token']);
 			Session::put('refresh_token', $data['refresh_token']);
 			Session::put('expire_access', $data['expires_in']);
-			Session::put('connect', $data['body']['data']['plugg_id']);
+			Session::put('plugg_id', $data['body']['data']['plugg_id']);
 			Session::put('user_id', $data['id']);
 			$this->auth();
 		} catch (Exception $e) {
@@ -52,16 +52,16 @@ class PluggTo
 		Session::put('access_token', $data['body']['access_token']);
 		Session::put('refresh_token', $data['body']['refresh_token']);
 		Session::put('expire_access', time() + $data['body']['expires_in'] - 60);
-		if (empty(Session::get('connect'))) {
+		if (empty(Session::get('plugg_id'))) {
 			$me = $this->request('users', 'GET', array(), 'http');
-			Session::put('connect', $me['body']['data']['plugg_id']);
-			$user = config('pluggTo.user_model')::firstOrNew(array('plugg_id' => Session::get('connect')));
-			$user->plugg_id = Session::get('connect');
+			Session::put('plugg_id', $me['body']['data']['plugg_id']);
+			$user = config('pluggTo.user_model')::firstOrNew(array('plugg_id' => Session::get('plugg_id')));
+			$user->plugg_id = Session::get('plugg_id');
 			$user->name = $me['body']['data']['name'];
 			$user->email = $me['body']['data']['email'];
 		}
 		if(!isset($user))
-			$user = config('pluggTo.user_model')::firstOrNew(array('plugg_id' => Session::get('connect')));
+			$user = config('pluggTo.user_model')::firstOrNew(array('plugg_id' => Session::get('plugg_id')));
 		$user->access_token  = Session::get('access_token');
 		$user->refresh_token = Session::get('refresh_token');
 		$user->expire_access = Session::get('expire_access');
