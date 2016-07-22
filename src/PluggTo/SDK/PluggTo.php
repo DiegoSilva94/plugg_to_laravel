@@ -9,8 +9,6 @@ use Exception;
 class PluggTo
 {
 
-	private $heads = array('Content-Type:application/json');
-
 	public function __construct($offline = false)
 	{
 		if (!$offline)
@@ -33,7 +31,7 @@ class PluggTo
 	public function loadUser($userid)
 	{
 		try {
-			$data = config('pluggTo.user_model')::firstOrNew(array('plugg_id' => $userid));
+			$data = config('pluggTo.user_model')::firstOrNew(['plugg_id' => $userid]);
 			Session::put('access_token', $data['access_token']);
 			Session::put('refresh_token', $data['refresh_token']);
 			Session::put('expire_access', $data['expires_in']);
@@ -55,15 +53,14 @@ class PluggTo
 		Session::put('refresh_token', $data['body']['refresh_token']);
 		Session::put('expire_access', time() + $data['body']['expires_in'] - 60);
 		if (empty(Session::get('plugg_id'))) {
-			$me = $this->request('users', 'GET', array(), 'http');
+			$me = $this->request('users', 'GET', [], 'http');
 			Session::put('plugg_id', $me['body']['data']['plugg_id']);
-			$user = config('pluggTo.user_model')::firstOrNew(array('plugg_id' => Session::get('plugg_id')));
-			$user->plugg_id = Session::get('plugg_id');
+			$user = config('pluggTo.user_model')::firstOrNew(['plugg_id' => Session::get('plugg_id')]);
 			$user->name = $me['body']['data']['name'];
 			$user->email = $me['body']['data']['email'];
 		}
 		if(!isset($user))
-			$user = config('pluggTo.user_model')::firstOrNew(array('plugg_id' => Session::get('plugg_id')));
+			$user = config('pluggTo.user_model')::firstOrNew(['plugg_id' => Session::get('plugg_id')]);
 		$user->access_token  = Session::get('access_token');
 		$user->refresh_token = Session::get('refresh_token');
 		$user->expire_access = Session::get('expire_access');
@@ -92,12 +89,12 @@ class PluggTo
 
 	private function authByCode()
 	{
-		$body = array(
+		$body = [
 			'grant_type' => 'authorization_code',
 			'code' => Session::get('connect'),
 			'client_id' => config('pluggTo.credencials.client'),
 			'client_secret' => config('pluggTo.credencials.password')
-		);
+		];
 		$result = $this->request('Oauth/token', 'POST', $body, 'http');
 		try {
 			$this->saveData($result);
@@ -110,12 +107,12 @@ class PluggTo
 
 	public function authByRefresh()
 	{
-		$body = array(
+		$body = [
 			'grant_type' => 'refresh_token',
 			'client_id' => config('pluggTo.credencials.client'),
 			'client_secret' => config('pluggTo.credencials.password'),
 			'refresh_token' => Session::get('refresh_token')
-		);
+		];
 		$result = $this->request('Oauth/token', 'POST', $body, 'http');
 		try {
 			$this->saveData($result);
@@ -126,7 +123,7 @@ class PluggTo
 		}
 	}
 
-	public function request($model, $method, $body = array(), $btype = 'json')
+	public function request($model, $method, $body = [], $btype = 'json')
 	{
 		$call = curl_init();
 		// buld the post data follwing the api needs
