@@ -20,9 +20,9 @@ class PluggTo
 		if(empty($connect) && empty($plugg_code))
 			throw new PluggToException("Codigo de acesso invalido ou não informado", 1);
 		if(!empty($connect))
-			return $this->auth();
+			return self::auth();
 		Session::put('connect', $plugg_code);
-		return $this->authByCode();
+		return self::authByCode();
 	}
 
 	// Retira informações do Banco de dados, joga para seção
@@ -35,23 +35,22 @@ class PluggTo
 			Session::put('expire_access', $data['expires_in']);
 			Session::put('plugg_id', $data['body']['data']['plugg_id']);
 			Session::put('user_id', $data['id']);
-			$this->auth();
+			self::auth();
 		} catch (Exception $e) {
 			if(env('APP_DEBUG'))
 				throw new PluggToException($e->getMessage(), 5);
 			throw new PluggToException("Usuario não encontrado", 5);
 		}
-		return $this;
 	}
 
 	// salva informações na Sessão e Banco de Dados
-	private function saveData($data)
+	private static function saveData($data)
 	{
 		Session::put('access_token', $data['body']['access_token']);
 		Session::put('refresh_token', $data['body']['refresh_token']);
 		Session::put('expire_access', time() + $data['body']['expires_in'] - 60);
 		if (empty(Session::get('plugg_id'))) {
-			$me = $this->request('users', 'GET', [], 'http');
+			$me = self::request('users', 'GET', [], 'http');
 			Session::put('plugg_id', $me['body']['data']['id']);
 			$user = config('pluggTo.user_model')::firstOrNew(['plugg_id' => Session::get('plugg_id')]);
 			$user->name = $me['body']['data']['name'];
@@ -72,21 +71,21 @@ class PluggTo
 		return Session::get('user_id');
 	}
 
-	private function auth()
+	private static function auth()
 	{
 		// Verifica se tem o access_token
 		if(empty(Session::get('access_token')))
-			return $this->authByCode();
+			return self::authByCode();
 		// Verifica se o acesso está expirado
 		if(Session::get('expire_access') <= time())
 			try {
-				return $this->authByRefresh();
+				return self::authByRefresh();
 			} catch (\Exception $e) {
-				return $this->authByCode();
+				return self::authByCode();
 			}
 	}
 
-	private function authByCode()
+	private static function authByCode()
 	{
 		$body = [
 			'grant_type' => 'authorization_code',
@@ -94,9 +93,9 @@ class PluggTo
 			'client_id' => config('pluggTo.credencials.client'),
 			'client_secret' => config('pluggTo.credencials.password')
 		];
-		$result = $this->request('Oauth/token', 'POST', $body, 'http');
+		$result = self::request('Oauth/token', 'POST', $body, 'http');
 		try {
-			$this->saveData($result);
+			self::saveData($result);
 		} catch (Exception $e) {
 			if(env('APP_DEBUG'))
 				throw new PluggToException($e->getMessage(), 4);
@@ -104,7 +103,7 @@ class PluggTo
 		}
 	}
 
-	private function authByRefresh()
+	private static function authByRefresh()
 	{
 		$body = [
 			'grant_type' => 'refresh_token',
@@ -112,9 +111,9 @@ class PluggTo
 			'client_secret' => config('pluggTo.credencials.password'),
 			'refresh_token' => Session::get('refresh_token')
 		];
-		$result = $this->request('Oauth/token', 'POST', $body, 'http');
+		$result = self::request('Oauth/token', 'POST', $body, 'http');
 		try {
-			$this->saveData($result);
+			self::saveData($result);
 		} catch (Exception $e) {
 			if(env('APP_DEBUG'))
 				throw new PluggToException($e->getMessage(), 4);
