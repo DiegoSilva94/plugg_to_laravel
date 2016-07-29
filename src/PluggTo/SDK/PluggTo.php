@@ -9,13 +9,11 @@ use Exception;
 class PluggTo
 {
 
-	public function __construct($offline = false)
+	protected function __construct()
 	{
-		if (!$offline)
-			$this->bootstrap();
 	}
 
-	private function bootstrap()
+	public static function bootstrap()
 	{
 		$connect = Session::get('connect');
 		$plugg_code = Input::get('pluggtocode');
@@ -28,7 +26,7 @@ class PluggTo
 	}
 
 	// Retira informações do Banco de dados, joga para seção
-	public function loadUser($userid)
+	public static function loadUser($userid)
 	{
 		try {
 			$data = config('pluggTo.user_model')::firstOrNew(['plugg_id' => $userid]);
@@ -47,7 +45,7 @@ class PluggTo
 	}
 
 	// salva informações na Sessão e Banco de Dados
-	public function saveData($data)
+	private function saveData($data)
 	{
 		Session::put('access_token', $data['body']['access_token']);
 		Session::put('refresh_token', $data['body']['refresh_token']);
@@ -69,12 +67,12 @@ class PluggTo
 		Session::put('user_id', $user->id);
 	}
 
-	public function userId()
+	public static function userId()
 	{
 		return Session::get('user_id');
 	}
 
-	public function auth()
+	private function auth()
 	{
 		// Verifica se tem o access_token
 		if(empty(Session::get('access_token')))
@@ -106,7 +104,7 @@ class PluggTo
 		}
 	}
 
-	public function authByRefresh()
+	private function authByRefresh()
 	{
 		$body = [
 			'grant_type' => 'refresh_token',
@@ -124,7 +122,7 @@ class PluggTo
 		}
 	}
 
-	public function request($model, $method, $body = [], $btype = 'json')
+	public static function request($model, $method, $body = [], $btype = 'json')
 	{
 		$call = curl_init();
 		// buld the post data follwing the api needs
