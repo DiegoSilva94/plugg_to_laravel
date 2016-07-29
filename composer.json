@@ -15,7 +15,8 @@
   "autoload": {
     "psr-4": {
       "PluggTo\\SDK\\": "src/PluggTo/SDK/",
-      "PluggTo\\ServiceProvider\\": "src/PluggTo/ServiceProvider/"
+      "PluggTo\\ServiceProvider\\": "src/PluggTo/ServiceProvider/",
+      "PluggTo\\Middleware\\": "src/PluggTo/Middleware/"
     }
   },
   "config": {
