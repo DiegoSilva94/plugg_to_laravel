@@ -29,9 +29,20 @@ class SincronizarPedido extends Command
      */
     public function handle()
     {
-        $users = config('pluggTo.user_model')::all();
+        $users = $this->createModel(config('pluggTo.user_model'))->all();
         foreach ($users as $user) {
             dispatch((new BaixaPedidos($user->plugg_id))->onQueue('pluggToPedidos'));
         }
+    }
+    /**
+     * Create a new instance of the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function createModel($model)
+    {
+        $class = '\\'.ltrim($model, '\\');
+
+        return new $class;
     }
 }
