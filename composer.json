@@ -12,11 +12,13 @@
   "support": {
     "email": "dsilvaoliveira94@gmail.com"
   },
+  "require": {
+    "php": ">=5.5.9",
+    "laravel/framework": "5.2.*"
+  },
   "autoload": {
     "psr-4": {
-      "PluggTo\\SDK\\": "src/PluggTo/SDK/",
-      "PluggTo\\ServiceProvider\\": "src/PluggTo/ServiceProvider/",
-      "PluggTo\\Middleware\\": "src/PluggTo/Middleware/"
+      "PluggTo\\": "src/PluggTo/"
     }
   },
   "config": {

@@ -1,6 +1,11 @@
 <?php
 namespace PluggTo\ServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Application as LaravelApplication;
+use PluggTo\Commands\SincronizarPedido;
+use PluggTo\Commands\SincronizarProduto;
+
 /**
  * Class RepositoryServiceProvider
  * @package Prettus\Repository\Providers
@@ -19,10 +24,25 @@ class PluggToServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/../../resources/config/pluggTo.php' => config_path('pluggTo.php')
-        ]);
-        $this->mergeConfigFrom(__DIR__ . '/../../resources/config/pluggTo.php', 'pluggTo');
+        $source = realpath(__DIR__.'/../../resources/config/pluggTo.php');
+        if ($this->app instanceof LaravelApplication && $this->app->runningInConsole())
+            $this->publishes([$source => config_path('pluggTo.php')]);
+        $this->mergeConfigFrom($source, 'pluggTo');
+        $this->setupMigrations($this->app);
+    }
+    /**
+     * Setup the migrations.
+     *
+     * @param \Illuminate\Contracts\Foundation\Application $app
+     *
+     * @return void
+     */
+    protected function setupMigrations(Application $app)
+    {
+        $source = realpath(__DIR__.'/../../resources/database/migrations/');
+
+        if ($app instanceof LaravelApplication && $app->runningInConsole())
+            $this->publishes([$source => database_path('migrations')], 'migrations');
     }
     /**
      * Register the service provider.
@@ -31,6 +51,9 @@ class PluggToServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->commands(SincronizarPedido::class);
+        $this->commands(SincronizarProduto::class);
+        
     }
     /**
      * Get the services provided by the provider.
