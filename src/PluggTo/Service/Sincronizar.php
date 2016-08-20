@@ -72,7 +72,7 @@ class Sincronizar
      */
     protected function getPedidoPorPluggId($plugg_id)
     {
-        return $this->pedido::firstOrCreate(['plugg_id'=> $plugg_id, 'user_id'=> PluggTo::userId()]);
+        return $this->createModel($this->pedido)->firstOrCreate(['plugg_id'=> $plugg_id, 'user_id'=> PluggTo::userId()]);
     }
 
     /**
@@ -81,7 +81,19 @@ class Sincronizar
      */
     protected function getProdutoPorPluggId($plugg_id)
     {
-        return $this->produto::firstOrCreate(['plugg_id'=> $plugg_id, 'user_id'=> PluggTo::userId()]);
+        return $this->createModel($this->produto)->firstOrCreate(['plugg_id'=> $plugg_id, 'user_id'=> PluggTo::userId()]);
+    }
+
+    /**
+     * Create a new instance of the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function createModel($model)
+    {
+        $class = '\\'.ltrim($model, '\\');
+
+        return new $class;
     }
 
 }
