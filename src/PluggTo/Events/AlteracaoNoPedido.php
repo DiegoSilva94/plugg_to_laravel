@@ -16,11 +16,11 @@ class AlteracaoNoPedido
     /**
      * @var Pedido
      */
-    private $pedido;
+    public $pedido;
     /**
      * @var array
      */
-    private $data;
+    public $data;
 
     /**
      * AlteracaoNoProduto constructor.
